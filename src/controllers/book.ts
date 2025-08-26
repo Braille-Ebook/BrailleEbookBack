@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import Book from '../models/book';
 import UserBookProgress from '../models/userBookProgress';
+import UserBookBookmark from '../models/userBookBookmark';
+import sequelize from '../sequelize';
 
 export const getBookInfo = async (
     req: Request,
@@ -68,31 +70,21 @@ export const addBookMark = async (
             });
         }
 
-        const [record, created] = await UserBookProgress.findOrCreate({
-            where: { user_id: userPk, book_id: bookId },
-            defaults: { user_id: userPk, book_id: bookId, is_bookmarked: true },
+        await sequelize.transaction(async (tx) => {
+            const [record, created] = await UserBookBookmark.findOrCreate({
+                where: { user_id: userPk, book_id: bookId },
+                defaults: { user_id: userPk, book_id: bookId },
+                transaction: tx,
+            });
+
+            if (created) {
+                await Book.increment('bookmark_num', {
+                    by: 1,
+                    where: { book_id: bookId },
+                    transaction: tx,
+                });
+            }
         });
-
-        if (created) {
-            await Book.increment('bookmark_num', {
-                where: { book_id: bookId },
-            });
-            return res.status(200).json({
-                success: true,
-                message: '북마크가 추가되었습니다.',
-            });
-        }
-
-        if (!record.is_bookmarked) {
-            await record.update({ is_bookmarked: true });
-            await Book.increment('bookmark_num', {
-                where: { book_id: bookId },
-            });
-            return res.status(200).json({
-                success: true,
-                message: '북마크가 추가되었습니다.',
-            });
-        }
 
         return res.status(200).json({
             success: true,
@@ -134,25 +126,27 @@ export const deleteBookMark = async (
             });
         }
 
-        const record = await UserBookProgress.findOne({
-            where: { user_id: userPk, book_id: bookId },
+        let deleted = 0;
+        await sequelize.transaction(async (tx) => {
+            deleted = await UserBookBookmark.destroy({
+                where: { user_id: userPk, book_id: bookId },
+                transaction: tx,
+            });
+            if (deleted) {
+                await Book.decrement('bookmark_num', {
+                    by: 1,
+                    where: { book_id: bookId },
+                    transaction: tx,
+                });
+            }
         });
 
-        if (!record) {
+        if (!deleted) {
             return res.status(404).json({
                 success: false,
-                message: '해당 도서 기록을 찾을 수 없습니다.', //row 없는 경우
+                message: '북마크 되어있지 않습니다.', //북마크 안 되어있었던 경우
             });
         }
-        if (!record.is_bookmarked) {
-            return res.status(404).json({
-                success: false,
-                message: '북마크 되어있지 않습니다.', //false인데 취소하는 경우
-            });
-        }
-
-        await record.update({ is_bookmarked: false });
-        await Book.decrement('bookmark_num', { where: { book_id: bookId } });
 
         return res.status(200).json({
             success: true,

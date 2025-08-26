@@ -7,13 +7,12 @@ export interface UserBookProgressAttributes {
     updated_at?: Date;
     last_page?: number;
     last_char?: number;
-    is_bookmarked?: boolean;
 }
 
 interface UserBookProgressCreationAttributes
     extends Optional<
         UserBookProgressAttributes,
-        'updated_at' | 'last_page' | 'last_char' | 'is_bookmarked'
+        'updated_at' | 'last_page' | 'last_char'
     > {}
 
 class UserBookProgress
@@ -28,7 +27,6 @@ class UserBookProgress
     public updated_at!: Date;
     public last_page!: number;
     public last_char!: number;
-    public is_bookmarked!: boolean;
 }
 
 UserBookProgress.init(
@@ -53,7 +51,6 @@ UserBookProgress.init(
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
-        is_bookmarked: DataTypes.BOOLEAN,
     },
     {
         sequelize,

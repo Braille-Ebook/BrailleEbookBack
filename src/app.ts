@@ -10,6 +10,7 @@ import pageRouter from './routes/page';
 import reviewRouter from './routes/review';
 import authRouter from './routes/auth';
 import bookRouter from './routes/book';
+import homeRouter from './routes/home';
 import mypageRouter from './routes/mypage';
 import passportConfig from './passport';
 import './models';
@@ -57,6 +58,7 @@ app.use('/auth', authRouter);
 app.use('/', pageRouter);
 app.use('/book/:bookId/review', reviewRouter);
 app.use('/book', bookRouter);
+app.use('/home', homeRouter);
 app.use('/mypage', mypageRouter);
 
 app.use((req, res, next) => {
