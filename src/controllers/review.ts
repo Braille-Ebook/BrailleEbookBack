@@ -10,20 +10,17 @@ const getReviews: RequestHandler = async (req, res, next) => {
             },
         });
         const reviewsWithIsLiked = await Promise.all(
-            reviews.map(async (r) => {
+            reviews.map(async (r: any) => {
                 const isLiked = await UserReviewLike.findOne({
                     where: {
                         user_id: req.user!.user_id, //isLoggedIn 함수로 req.user의 존재여부는 확실하기 때문에 !. 사용
-                        review_id: r.dataValues.review_id,
+                        review_id: r.review_id,
                     },
                 });
 
                 return {
                     ...r.toJSON(), // convert Sequelize instance to plain object
-                    isLiked:
-                        r.dataValues.user_id == req.user!.user_id
-                            ? null
-                            : !!isLiked,
+                    isLiked: r.user_id == req.user!.user_id ? null : !!isLiked,
                 };
             })
         );

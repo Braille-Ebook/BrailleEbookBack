@@ -40,7 +40,6 @@ User.belongsToMany(Book, {
     as: 'bookmarkedBooks',
     onDelete: 'CASCADE',
 });
-
 Book.belongsToMany(User, {
     through: UserBookBookmark,
     foreignKey: 'book_id',
@@ -48,6 +47,10 @@ Book.belongsToMany(User, {
     as: 'bookmarkUsers',
     onDelete: 'CASCADE',
 });
+User.hasMany(UserBookBookmark, { foreignKey: 'user_id' });
+Book.hasMany(UserBookBookmark, { foreignKey: 'book_id' });
+UserBookBookmark.belongsTo(User, { foreignKey: 'user_id' });
+UserBookBookmark.belongsTo(Book, { foreignKey: 'book_id' });
 
 export {
     User,
