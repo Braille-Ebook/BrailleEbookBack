@@ -79,14 +79,17 @@ const getMyBooks: RequestHandler = async (req, res, next) => {
             },
         ],
     });
-    const result = progress.map((p) => ({
-        bookId: p.dataValues.book_id,
-        title: p.dataValues.Book?.dataValues.title || '(제목 없음)',
-        author: p.dataValues.Book?.dataValues.author || '',
-        translator: p.dataValues.Book?.dataValues.translator || '',
-        updatedAt: p.dataValues.updated_at,
-        isBookmarked: p.dataValues.is_bookmarked,
-    }));
+    const result = progress.map((p) => {
+        const book = (p as any).Book;
+        return {
+            bookId: p.dataValues.book_id,
+            title: book?.dataValues.title || '(제목 없음)',
+            author: book?.dataValues.author || '',
+            translator: book?.dataValues.translator || '',
+            updatedAt: p.dataValues.updated_at,
+            isBookmarked: p.dataValues.is_bookmarked,
+        };
+    });
     res.status(200).send({
         success: true,
         message: '책 정보 불러오기가 성공했습니다.',
