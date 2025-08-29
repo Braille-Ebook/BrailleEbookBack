@@ -87,7 +87,7 @@ const getMyBooks: RequestHandler = async (req, res, next) => {
             author: book?.dataValues.author || '',
             translator: book?.dataValues.translator || '',
             updatedAt: p.dataValues.updated_at,
-            isBookmarked: p.dataValues.is_bookmarked,
+            //isBookmarked: p.dataValues.is_bookmarked,
         };
     });
     res.status(200).send({
