@@ -120,11 +120,19 @@ const likeReviews: RequestHandler = async (req, res, next) => {
         if (existing) {
             // Unlike
             await existing.destroy();
+            await Review.decrement('like_count', {
+                by: 1,
+                where: { review_id: req.params.reviewId },
+            });
         } else {
             //Like
             await UserReviewLike.create({
                 user_id: req.user!.user_id,
                 review_id: req.params.reviewId,
+            });
+            await Review.increment('like_count', {
+                by: 1,
+                where: { review_id: req.params.reviewId },
             });
         }
         res.status(200).send({
