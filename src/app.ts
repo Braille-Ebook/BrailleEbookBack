@@ -13,6 +13,7 @@ import bookRouter from './routes/book';
 import homeRouter from './routes/home';
 import mypageRouter from './routes/mypage';
 import searchRouter from './routes/search';
+import libraryRouter from './routes/library';
 import passportConfig from './passport';
 import './models';
 
@@ -62,6 +63,7 @@ app.use('/book', bookRouter);
 app.use('/home', homeRouter);
 app.use('/mypage', mypageRouter);
 app.use('/search', searchRouter);
+app.use('/library', libraryRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
