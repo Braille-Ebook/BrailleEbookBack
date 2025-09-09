@@ -22,6 +22,11 @@ const getLastLocation: RequestHandler = async (req, res, next) => {
 
 const postLastLocation: RequestHandler = async (req, res, next) => {
     try {
+        if (req.body.lastPage == null || req.body.lastChar == null) {
+            const error = new Error('lastPage와 lastChar을 입력해야합니다.');
+            error.status = 400;
+            next(error);
+        }
         await UserBookProgress.upsert({
             user_id: req.user!.user_id,
             book_id: Number(req.params.bookId),
@@ -56,17 +61,23 @@ const addPageBookmark: RequestHandler = async (req, res, next) => {
 
 const deletePageBookmark: RequestHandler = async (req, res, next) => {
     try {
-        await UserPageBookmark.destroy({
+        const deletedCount = await UserPageBookmark.destroy({
             where: {
                 user_id: req.user!.user_id,
                 book_id: req.params.bookId,
                 bookmarked_page: req.query.page,
             },
         });
-        res.status(200).send({
-            success: true,
-            message: '페이지 북마크 제거하기가 성공했습니다.',
-        });
+        if (deletedCount) {
+            res.status(200).send({
+                success: true,
+                message: '페이지 북마크 제거하기가 성공했습니다.',
+            });
+        } else {
+            const error = new Error('존재하지 않는 페이지 북마크입니다.');
+            error.status = 400;
+            next(error);
+        }
     } catch (e) {
         next(e);
     }
