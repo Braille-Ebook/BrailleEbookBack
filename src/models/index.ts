@@ -4,6 +4,7 @@ import Review from './review';
 import UserBookProgress from './userBookProgress';
 import UserPageBookmark from './userPageBookmark';
 import UserReviewLike from './userReviewLike';
+import UserBookBookmark from './userBookBookmark';
 
 User.hasMany(Review, { foreignKey: 'user_id' });
 Review.belongsTo(User, { foreignKey: 'user_id' });
@@ -32,6 +33,25 @@ Review.belongsToMany(User, {
     otherKey: 'user_id',
 });
 
+User.belongsToMany(Book, {
+    through: UserBookBookmark,
+    foreignKey: 'user_id',
+    otherKey: 'book_id',
+    as: 'bookmarkedBooks',
+    onDelete: 'CASCADE',
+});
+Book.belongsToMany(User, {
+    through: UserBookBookmark,
+    foreignKey: 'book_id',
+    otherKey: 'user_id',
+    as: 'bookmarkUsers',
+    onDelete: 'CASCADE',
+});
+User.hasMany(UserBookBookmark, { foreignKey: 'user_id' });
+Book.hasMany(UserBookBookmark, { foreignKey: 'book_id' });
+UserBookBookmark.belongsTo(User, { foreignKey: 'user_id' });
+UserBookBookmark.belongsTo(Book, { foreignKey: 'book_id' });
+
 export {
     User,
     Book,
@@ -39,4 +59,5 @@ export {
     UserBookProgress,
     UserPageBookmark,
     UserReviewLike,
+    UserBookBookmark,
 };

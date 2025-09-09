@@ -1,7 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../sequelize';
-import User from './user';
-import Book from './book';
 
 class Review extends Model {}
 
