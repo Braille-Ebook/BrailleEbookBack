@@ -47,6 +47,7 @@
         "passport": "^0.7.0",
         "passport-kakao": "^1.0.1",
         "passport-local": "^1.0.0",
+        "pdfjs-dist": "^2.16.105",
         "sequelize": "^6.37.7",
         "sequelize-typescript": "^2.1.6"
     }
