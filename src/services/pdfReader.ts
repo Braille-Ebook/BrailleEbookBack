@@ -1,6 +1,4 @@
-import fs from 'fs';
 import path from 'path';
-//import { getDocument } from 'pdfjs-dist';
 
 const pdfjsLib: any = require('pdfjs-dist/build/pdf.js');
 const WORKER_PATH = path.join(
@@ -20,7 +18,5 @@ export const extractPdfText = async (pdfUrl: string, page: number) => {
     const pdfPage = await pdf.getPage(page);
     const textContent = await pdfPage.getTextContent();
     const text = textContent.items.map((item: any) => item.str).join(' ');
-    console.log(pdf.numPages);
-    console.log(textContent.items.length);
     return text;
 };
