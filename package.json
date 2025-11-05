@@ -22,7 +22,7 @@
     "devDependencies": {
         "@types/bcrypt": "^6.0.0",
         "@types/express": "^5.0.3",
-        "@types/node": "^24.0.12",
+        "@types/node": "^24.10.0",
         "@types/nodemailer": "^6.4.17",
         "@types/passport": "^1.0.17",
         "@types/passport-kakao": "^1.0.3",
@@ -30,15 +30,17 @@
         "nodemon": "^3.1.10",
         "prettier": "^3.6.2",
         "ts-node": "^10.9.2",
-        "typescript": "^5.8.3"
+        "typescript": "^5.9.3"
     },
     "dependencies": {
         "@types/cookie-parser": "^1.4.9",
         "@types/express-session": "^1.18.2",
         "@types/morgan": "^1.9.10",
+        "axios": "^1.13.2",
         "bcrypt": "^6.0.0",
         "cookie-parser": "^1.4.7",
-        "dotenv": "^17.2.0",
+        "dayjs": "^1.11.19",
+        "dotenv": "^17.2.3",
         "express": "^5.1.0",
         "express-session": "^1.18.1",
         "morgan": "^1.10.0",
