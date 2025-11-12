@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
-import { UserBookProgress, UserPageBookmark } from '../models';
+import { UserBookProgress, UserPageBookmark, Book } from '../models';
+import { extractPdfText } from '../services/pdfReader';
 
 const getLastLocation: RequestHandler = async (req, res, next) => {
     try {
@@ -102,10 +103,37 @@ const getPageBookmark: RequestHandler = async (req, res, next) => {
     }
 };
 
+const getPageText: RequestHandler = async (req, res, next) => {
+    try {
+        const { bookId } = req.params;
+
+        const { page } = req.query;
+
+        const bookPdf = await Book.findByPk(bookId, {
+            attributes: ['pdf_url'],
+        });
+        const text = await extractPdfText(
+            bookPdf?.dataValues.pdf_url,
+            Number(page)
+        );
+
+        res.status(200).send({
+            success: true,
+            message: `pdf ${page}쪽 텍스트 추출 성공했습니다.`,
+            data: text,
+        });
+    } catch (e) {
+        //에러 처리
+        //여기에 Invalid page request에러도 포함되어 있음
+        next(e);
+    }
+};
+
 export {
     getLastLocation,
     postLastLocation,
     addPageBookmark,
     deletePageBookmark,
     getPageBookmark,
+    getPageText,
 };

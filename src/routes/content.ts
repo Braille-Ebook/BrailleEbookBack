@@ -5,6 +5,7 @@ import {
     addPageBookmark,
     getPageBookmark,
     deletePageBookmark,
+    getPageText,
 } from '../controllers/content';
 import { isLoggedIn, isBookIdValid } from '../middlewares';
 
@@ -20,5 +21,6 @@ router.delete(
     isBookIdValid,
     deletePageBookmark
 );
+router.get('/:bookId', isLoggedIn, isBookIdValid, getPageText);
 
 export default router;
