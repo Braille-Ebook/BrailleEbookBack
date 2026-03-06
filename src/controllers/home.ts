@@ -101,7 +101,7 @@ export const getRecommend = async (
                 if (!parsed?.ok || !Array.isArray(ids) || ids.length === 0) {
                     return res.status(200).json({
                         success: true,
-                        message: '추천할 책이 없습니다.',
+                        message: '추천 결과가 없습니다.',
                         data: [],
                     });
                 }

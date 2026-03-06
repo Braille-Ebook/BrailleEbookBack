@@ -11,7 +11,7 @@ import { isLoggedIn } from '../middlewares';
 const router = express.Router();
 
 router.get('/recent', getRecent);
-router.get('/recommend', isLoggedIn, getRecommend);
+router.get('/recommend', getRecommend);
 router.get('/popular', getPopular);
 router.get('/new', getNew);
 router.get('/genre', getByGenre);
