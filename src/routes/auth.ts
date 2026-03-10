@@ -1,5 +1,7 @@
 import express from 'express';
 import passport from 'passport';
+import User from '../models/user';
+import { generateAppToken } from '../utils/jwt';
 import {
     join,
     login,
@@ -15,13 +17,14 @@ import {
     isLoggedIn,
     isNotLoggedIn,
     validateEmailFormat,
+    isLoggedInOrAppToken,
 } from '../middlewares/index';
 
 const router = express.Router();
 
 router.post('/join', isNotLoggedIn, join);
 router.post('/login', isNotLoggedIn, login);
-router.post('/logout', isLoggedIn, logout);
+router.post('/logout', isLoggedInOrAppToken, logout);
 
 router.post('/send-code', validateEmailFormat, sendVerificationCode);
 router.post('/verify-code', verifyCode);
@@ -34,7 +37,14 @@ router.get(
         failureRedirect: '/?loginError=카카오로그인 실패',
     }),
     (req, res) => {
-        res.redirect('/');
+        const user = req.user as User;
+        const token = generateAppToken(user);
+
+        console.log('JWT token:', token);
+
+        return res.redirect(
+            `brailleebookfront://auth/kakao/callback?token=${encodeURIComponent(token)}`
+        );
     }
 );
 

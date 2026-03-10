@@ -7,20 +7,40 @@ import {
     deletePageBookmark,
     getPageText,
 } from '../controllers/content';
-import { isLoggedIn, isBookIdValid } from '../middlewares';
+import { isLoggedInOrAppToken, isBookIdValid } from '../middlewares';
 
 const router = express.Router();
 
-router.get('/:bookId/last', isLoggedIn, isBookIdValid, getLastLocation);
-router.post('/:bookId/last', isLoggedIn, isBookIdValid, postLastLocation);
-router.post('/:bookId/bookmark', isLoggedIn, isBookIdValid, addPageBookmark);
-router.get('/:bookId/bookmark', isLoggedIn, isBookIdValid, getPageBookmark);
+router.get(
+    '/:bookId/last',
+    isLoggedInOrAppToken,
+    isBookIdValid,
+    getLastLocation
+);
+router.post(
+    '/:bookId/last',
+    isLoggedInOrAppToken,
+    isBookIdValid,
+    postLastLocation
+);
+router.post(
+    '/:bookId/bookmark',
+    isLoggedInOrAppToken,
+    isBookIdValid,
+    addPageBookmark
+);
+router.get(
+    '/:bookId/bookmark',
+    isLoggedInOrAppToken,
+    isBookIdValid,
+    getPageBookmark
+);
 router.delete(
     '/:bookId/bookmark',
-    isLoggedIn,
+    isLoggedInOrAppToken,
     isBookIdValid,
     deletePageBookmark
 );
-router.get('/:bookId', isLoggedIn, isBookIdValid, getPageText);
+router.get('/:bookId', isLoggedInOrAppToken, isBookIdValid, getPageText);
 
 export default router;

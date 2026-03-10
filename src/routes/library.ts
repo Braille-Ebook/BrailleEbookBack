@@ -1,9 +1,9 @@
 import express from 'express';
 import { getBookmarkedBooks } from '../controllers/library';
-import { isLoggedIn } from '../middlewares';
+import { isLoggedInOrAppToken } from '../middlewares';
 
 const router = express.Router();
 
-router.get('/', isLoggedIn, getBookmarkedBooks);
+router.get('/', isLoggedInOrAppToken, getBookmarkedBooks);
 
 export default router;

@@ -6,29 +6,33 @@ import {
     updateReviews,
     likeReviews,
 } from '../controllers/review';
-import { isLoggedIn, isBookIdValid, isReviewIdValid } from '../middlewares';
+import {
+    isLoggedInOrAppToken,
+    isBookIdValid,
+    isReviewIdValid,
+} from '../middlewares';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', isLoggedIn, isBookIdValid, getReviews); //해당 책에 대한 리뷰 모두 get
-router.post('/', isLoggedIn, isBookIdValid, postReviews); //새 리뷰 post하기
+router.get('/', isLoggedInOrAppToken, isBookIdValid, getReviews); //해당 책에 대한 리뷰 모두 get
+router.post('/', isLoggedInOrAppToken, isBookIdValid, postReviews); //새 리뷰 post하기
 router.delete(
     '/:reviewId',
-    isLoggedIn,
+    isLoggedInOrAppToken,
     isBookIdValid,
     isReviewIdValid,
     deleteReviews
 );
 router.patch(
     '/:reviewId',
-    isLoggedIn,
+    isLoggedInOrAppToken,
     isBookIdValid,
     isReviewIdValid,
     updateReviews
 );
 router.post(
     '/:reviewId/like',
-    isLoggedIn,
+    isLoggedInOrAppToken,
     isBookIdValid,
     isReviewIdValid,
     likeReviews
