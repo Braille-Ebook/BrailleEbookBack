@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Book from '../models/book';
 import UserBookProgress from '../models/userBookProgress';
 import UserBookBookmark from '../models/userBookBookmark';
+import { bookmarkInclude } from '../utils/bookmarkAttribute';
 import sequelize from '../sequelize';
 
 export const getBookInfo = async (
@@ -10,6 +11,7 @@ export const getBookInfo = async (
     next: NextFunction
 ) => {
     try {
+        const userId = req.user?.user_id;
         const bookId = parseInt(req.params.bookId);
 
         if (isNaN(bookId)) {
@@ -19,7 +21,7 @@ export const getBookInfo = async (
             });
         }
 
-        const book = await Book.findByPk(bookId); //Book.findOne({where:{book_id:bookId}})
+        const book = await Book.findByPk(bookId, bookmarkInclude(userId));
 
         if (!book) {
             return res.status(404).json({
