@@ -4,6 +4,7 @@ import path from 'path';
 import os from 'os';
 import Book from '../models/book';
 import UserBookProgress from '../models/userBookProgress';
+import { bookmarkInclude } from '../utils/bookmarkAttribute';
 
 export const getRecent = async (
     req: Request,
@@ -22,8 +23,15 @@ export const getRecent = async (
         }
 
         const books = await UserBookProgress.findAll({
-            where: { user_id: userPk },
-            include: [{ model: Book }],
+            where: {
+                user_id: userPk,
+            },
+            include: [
+                {
+                    model: Book,
+                    ...(bookmarkInclude(userPk) as any),
+                },
+            ],
             order: [['updated_at', 'DESC']],
             limit: 20,
         });
@@ -43,9 +51,15 @@ export const getRecommend = async (
     res: Response,
     next: NextFunction
 ) => {
+    const userId = req.user?.user_id;
     try {
         const userPk = req.user?.user_id;
         const topk = 20;
+        const books = await Book.findAll({
+            order: [['bookmark_num', 'DESC']],
+            limit: 20,
+            ...bookmarkInclude(userId),
+        });
 
         // 로그인 안 한 경우
         if (!userPk) {
@@ -135,10 +149,12 @@ export const getPopular = async (
     res: Response,
     next: NextFunction
 ) => {
+    const userId = req.user?.user_id;
     try {
         const books = await Book.findAll({
             order: [['bookmark_num', 'DESC']],
             limit: 20,
+            ...bookmarkInclude(userId),
         });
 
         return res.status(200).json({
@@ -156,10 +172,12 @@ export const getNew = async (
     res: Response,
     next: NextFunction
 ) => {
+    const userId = req.user?.user_id;
     try {
         const books = await Book.findAll({
             order: [['publish_date', 'DESC']],
             limit: 20,
+            ...bookmarkInclude(userId),
         });
 
         return res.status(200).json({
@@ -178,6 +196,7 @@ export const getByGenre = async (
     next: NextFunction
 ) => {
     try {
+        const userId = req.user?.user_id;
         const genre = (req.query.genre as string).trim();
 
         if (!genre) {
@@ -191,6 +210,7 @@ export const getByGenre = async (
             where: { genre },
             order: [['bookmark_num', 'DESC']], //인기순으로 정렬
             limit: 20,
+            ...bookmarkInclude(userId),
         });
 
         return res.status(200).json({
