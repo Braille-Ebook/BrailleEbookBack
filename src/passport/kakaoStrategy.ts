@@ -10,7 +10,6 @@ export default () => {
                 callbackURL: '/auth/kakao/callback',
             },
             async (accessToken, refreshToken, profile, done) => {
-                console.log('Kakao profile:', profile);
                 try {
                     const exUser = await User.findOne({
                         where: { sns_id: profile.id, provider: 'kakao' },

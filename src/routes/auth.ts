@@ -40,8 +40,6 @@ router.get(
         const user = req.user as User;
         const token = generateAppToken(user);
 
-        console.log('JWT token:', token);
-
         return res.redirect(
             `brailleebookfront://auth/kakao/callback?token=${encodeURIComponent(token)}`
         );
