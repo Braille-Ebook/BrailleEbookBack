@@ -20,6 +20,7 @@ export const getBookmarkedBooks = async (
                 book_id: bookIds,
             },
             attributes: [
+                'book_id',
                 'image_url',
                 'title',
                 'author',
