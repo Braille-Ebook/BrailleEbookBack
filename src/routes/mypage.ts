@@ -1,11 +1,11 @@
 import express from 'express';
 import { getMyInfo, getMyReviews, getMyBooks } from '../controllers/mypage';
-import { isLoggedIn } from '../middlewares';
+import { isLoggedInOrAppToken } from '../middlewares';
 
 const router = express.Router();
 
-router.get('/info', isLoggedIn, getMyInfo);
-router.get('/reviews', isLoggedIn, getMyReviews);
-router.get('/books', isLoggedIn, getMyBooks);
+router.get('/info', isLoggedInOrAppToken, getMyInfo);
+router.get('/reviews', isLoggedInOrAppToken, getMyReviews);
+router.get('/books', isLoggedInOrAppToken, getMyBooks);
 
 export default router;
