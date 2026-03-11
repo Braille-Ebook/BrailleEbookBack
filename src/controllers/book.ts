@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Book from '../models/book';
+import { Book, Review } from '../models';
 import UserBookProgress from '../models/userBookProgress';
 import UserBookBookmark from '../models/userBookBookmark';
 import { bookmarkInclude } from '../utils/bookmarkAttribute';
@@ -22,6 +22,13 @@ export const getBookInfo = async (
         }
 
         const book = await Book.findByPk(bookId, bookmarkInclude(userId));
+        const bestReviews = await Review.findAll({
+            where: {
+                book_id: bookId,
+            },
+            order: [['like_count', 'DESC']],
+            limit: 2,
+        });
 
         if (!book) {
             return res.status(404).json({
@@ -30,10 +37,14 @@ export const getBookInfo = async (
             });
         }
 
+        const bookData = {
+            ...book.toJSON(),
+            bestReviews,
+        };
         return res.status(200).json({
             success: true,
             message: '도서정보 조회 성공',
-            data: book,
+            data: bookData,
         });
     } catch (err) {
         console.error(err);
