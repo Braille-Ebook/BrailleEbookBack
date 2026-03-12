@@ -232,7 +232,7 @@ export const startRead = async (
                 ? '읽기 정보를 초기화했습니다.'
                 : '처음부터 읽기 정보입니다.',
             data: {
-                page: 0,
+                page: 1,
                 charIndex: 0,
             },
         });
