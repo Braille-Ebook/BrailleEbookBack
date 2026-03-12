@@ -221,7 +221,7 @@ export const startRead = async (
         await UserBookProgress.upsert({
             user_id: userPk,
             book_id: bookId,
-            last_page: 0,
+            last_page: 1,
             last_char: 0,
             updated_at: new Date(),
         });
