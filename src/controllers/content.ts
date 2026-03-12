@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { UserBookProgress, UserPageBookmark, Book } from '../models';
-import { extractPdfText } from '../services/pdfReader';
+import { extractPdfData } from '../services/pdfReader';
 
 const getLastLocation: RequestHandler = async (req, res, next) => {
     try {
@@ -112,7 +112,7 @@ const getPageText: RequestHandler = async (req, res, next) => {
         const bookPdf = await Book.findByPk(bookId, {
             attributes: ['pdf_url'],
         });
-        const text = await extractPdfText(
+        const data = await extractPdfData(
             bookPdf?.dataValues.pdf_url,
             Number(page)
         );
@@ -120,7 +120,7 @@ const getPageText: RequestHandler = async (req, res, next) => {
         res.status(200).send({
             success: true,
             message: `pdf ${page}쪽 텍스트 추출 성공했습니다.`,
-            data: text,
+            data,
         });
     } catch (e) {
         //에러 처리

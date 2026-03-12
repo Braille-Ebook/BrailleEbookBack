@@ -13,10 +13,10 @@ const WORKER_PATH = path.join(
 );
 pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_PATH;
 
-export const extractPdfText = async (pdfUrl: string, page: number) => {
+export const extractPdfData = async (pdfUrl: string, page: number) => {
     const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
     const pdfPage = await pdf.getPage(page);
     const textContent = await pdfPage.getTextContent();
     const text = textContent.items.map((item: any) => item.str).join(' ');
-    return text;
+    return { text, pages_num: pdf.numPages };
 };
