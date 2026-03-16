@@ -5,6 +5,7 @@ import UserBookProgress from './userBookProgress';
 import UserPageBookmark from './userPageBookmark';
 import UserReviewLike from './userReviewLike';
 import UserBookBookmark from './userBookBookmark';
+import BookEmbedding from './bookEmbedding';
 
 User.hasMany(Review, { foreignKey: 'user_id' });
 Review.belongsTo(User, { foreignKey: 'user_id' });
@@ -60,4 +61,5 @@ export {
     UserPageBookmark,
     UserReviewLike,
     UserBookBookmark,
+    BookEmbedding,
 };
