@@ -86,6 +86,36 @@ const isLoggedInOrAppToken = async (
     return verifyAppToken(req, res, next);
 };
 
+const attachUserIfExists = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            return next();
+        }
+
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return next();
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = verifyAppTokenValue(token);
+        const user = await User.findByPk(decoded.user_id);
+
+        if (user) {
+            req.user = user as Express.User;
+        }
+
+        return next();
+    } catch (error) {
+        console.error(error);
+        return next();
+    }
+};
+
 export {
     isLoggedIn,
     isNotLoggedIn,
@@ -94,4 +124,5 @@ export {
     validateEmailFormat,
     verifyAppToken,
     isLoggedInOrAppToken,
+    attachUserIfExists,
 };
