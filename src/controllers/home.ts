@@ -33,7 +33,7 @@ export const getRecent = async (
                 },
             ],
             order: [['updated_at', 'DESC']],
-            limit: 20,
+            limit: 5,
         });
 
         return res.status(200).json({
