@@ -15,6 +15,7 @@ import mypageRouter from './routes/mypage';
 import searchRouter from './routes/search';
 import libraryRouter from './routes/library';
 import contentRouter from './routes/content';
+import adminRouter from './routes/admin';
 import passportConfig from './passport';
 import './models';
 
@@ -66,6 +67,7 @@ app.use('/mypage', mypageRouter);
 app.use('/search', searchRouter);
 app.use('/library', libraryRouter);
 app.use('/content', contentRouter);
+app.use('/admin', adminRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
