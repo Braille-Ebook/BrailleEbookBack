@@ -10,12 +10,13 @@ interface UserAttributes {
     sns_id?: string;
     provider: string;
     created_at?: Date;
+    admin: boolean;
 }
 
 interface UserCreationAttributes
     extends Optional<
         UserAttributes,
-        'user_id' | 'userId' | 'sns_id' | 'created_at'
+        'user_id' | 'userId' | 'sns_id' | 'created_at' | 'admin'
     > {}
 //회원가입 시 입력받지 않아도 되는 필드
 
@@ -31,6 +32,7 @@ class User
     public sns_id?: string;
     public provider!: string;
     public created_at?: Date;
+    public admin!: boolean;
 }
 
 User.init(
@@ -75,6 +77,7 @@ User.init(
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
+        admin: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
         sequelize,

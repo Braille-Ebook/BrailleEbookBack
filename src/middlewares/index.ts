@@ -19,6 +19,17 @@ const isNotLoggedIn = (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.admin) {
+        return res.status(403).json({
+            success: false,
+            message: '관리자만 접근 가능합니다.',
+        });
+    }
+
+    next();
+};
+
 const validateEmailFormat = (
     req: Request,
     res: Response,
@@ -125,4 +136,5 @@ export {
     verifyAppToken,
     isLoggedInOrAppToken,
     attachUserIfExists,
+    isAdmin,
 };

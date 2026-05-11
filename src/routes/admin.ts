@@ -1,12 +1,18 @@
 import express from 'express';
 import passport from 'passport';
-//import { isAdmin } from "../middlewares";
-import { getBooks, addBook, deleteBook } from '../controllers/admin';
+import { isAdmin, isLoggedIn } from '../middlewares';
+import {
+    adminLogin,
+    getBooks,
+    addBook,
+    deleteBook,
+} from '../controllers/admin';
 
 const router = express.Router();
 
-router.get('/books', getBooks);
-router.post('/books', addBook);
-router.delete('/books/:id', deleteBook);
+router.post('/login', adminLogin);
+router.get('/books', isLoggedIn, isAdmin, getBooks);
+router.post('/books', isLoggedIn, isAdmin, addBook);
+router.delete('/books/:id', isLoggedIn, isAdmin, deleteBook);
 
 export default router;

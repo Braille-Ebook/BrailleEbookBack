@@ -12,6 +12,7 @@ declare global {
             sns_id?: string;
             provider: string;
             created_at?: Date;
+            admin: boolean;
         }
         interface Request {
             user: User;

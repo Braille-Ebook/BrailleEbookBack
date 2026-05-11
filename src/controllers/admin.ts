@@ -1,8 +1,61 @@
 import { Request, Response, NextFunction } from 'express';
 import { Op, Order } from 'sequelize';
-import { Book } from '../models';
+import passport from 'passport';
+import { Book, User } from '../models';
 import { pdfSizeCalculator } from '../services/pdfSizeCalculator';
 
+export const adminLogin = (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate(
+        'local',
+        (
+            authError: Error | null,
+            user: Express.User | false,
+            info: { message: string }
+        ) => {
+            if (authError) {
+                console.error(authError);
+                return next(authError);
+            }
+
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: info.message,
+                });
+            }
+
+            // 관리자 체크
+            if (!user.admin) {
+                return res.status(403).json({
+                    success: false,
+                    message: '관리자 계정이 아닙니다.',
+                });
+            }
+
+            return req.login(user, (loginError) => {
+                if (loginError) {
+                    console.error(loginError);
+                    return next(loginError);
+                }
+
+                const { user_id, userId, email, nickname, admin } =
+                    user as User;
+
+                return res.status(200).json({
+                    success: true,
+                    message: '관리자 로그인 성공',
+                    user: {
+                        id: user_id,
+                        userId,
+                        email,
+                        nickname,
+                        admin,
+                    },
+                });
+            });
+        }
+    )(req, res, next);
+};
 export const getBooks = async (
     req: Request,
     res: Response,
