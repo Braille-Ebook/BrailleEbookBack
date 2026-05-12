@@ -34,7 +34,10 @@ export const syncDB = async () => {
 
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin: [
+            'http://localhost:5173',
+            'https://braille-ebook-admin.netlify.app',
+        ],
         credentials: true,
     })
 );
