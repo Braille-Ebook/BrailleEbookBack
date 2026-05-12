@@ -18,6 +18,7 @@ import contentRouter from './routes/content';
 import adminRouter from './routes/admin';
 import passportConfig from './passport';
 import './models';
+import cors from 'cors';
 
 const app = express();
 passportConfig();
@@ -31,6 +32,15 @@ export const syncDB = async () => {
     }
 };
 
+app.use(
+    cors({
+        origin: [
+            'http://localhost:5173',
+            'https://braille-ebook-admin.netlify.app',
+        ],
+        credentials: true,
+    })
+);
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
